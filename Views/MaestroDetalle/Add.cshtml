@@ -1,0 +1,123 @@
+﻿@model MaestroDetalleMVC.Models.ViewModels.VentaViewModel
+
+@{
+    ViewBag.Title = "Maestro Detalle";
+}
+
+
+<h2>Index</h2>
+
+<div style="color:chartreuse">
+    @ViewBag.Message
+</div>
+
+@using (Html.BeginForm("Add", "MaestroDetalle", FormMethod.Post))
+{
+<div class="row">
+    <div class="fomr-group">
+        @Html.LabelFor(d => d.Cliente)
+        @Html.TextBoxFor(x => x.Cliente)
+    </div>
+    <hr />
+    <div class="form-group">
+        Cantidad
+        <input type="number" id="Cantidad" />
+        Nombre
+        <input type="text" id="Nombre" />
+        Precio Unitario
+        <input type="number" id="PrecioUnitario" />
+        <input value="Agregar" type="button" onclick="AgregarConcepto(); return false;" />
+    </div>
+
+    <div id="divConceptos">
+        <table id="tablaConceptos" style="width:100%;">
+            <tr>
+                <th>
+                    Cantidad
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Precio Unitario
+                </th>
+                <th>
+                    Total
+                </th>
+            </tr>
+        </table>
+    </div>
+    
+    <div>
+        <input type="submit" />
+    </div>
+</div>
+}
+
+<script>
+    var num = 0;
+
+    function AgregarConcepto(){
+        //console.log("hola");
+        let Cantidad = document.getElementById("Cantidad").value;
+        let Nombre = document.getElementById("Nombre").value;
+        let PrecioUnitario = document.getElementById("PrecioUnitario").value;
+
+        let Tabla = document.getElementById("tablaConceptos");
+        let TR = document.createElement("tr");
+
+        let TDCantidad = document.createElement("td");
+        let TDNombre = document.createElement("td");
+        let TDPrecioUnitario = document.createElement("td");
+        let TDTotal = document.createElement("td");
+
+        TR.appendChild(TDCantidad);
+        TR.appendChild(TDNombre);
+        TR.appendChild(TDPrecioUnitario);
+        TR.appendChild(TDTotal);
+
+        TDCantidad.innerHTML = Cantidad;
+        TDNombre.innerHTML = Nombre;
+        TDPrecioUnitario.innerHTML = PrecioUnitario;
+        TDTotal.innerHTML = parseFloat(Cantidad) * parseFloat(PrecioUnitario);
+
+        Tabla.appendChild(TR); 
+
+        // Se agregan "hiddens"
+        // Nota es importante que si, en la clase "VentaViewModel", el "List" se llama "conceptos" con minúsculas; aquí, debe ser con
+        // minúsculas. Lo mismo para "Nombre", "PrecioUnitario" y "Cantidad". Es "Case Sensitive", se deben respetar mayúsculas y minús-
+        // culas.
+        let DivConceptos = document.getElementById("divConceptos");
+        let HiddenIndex = document.createElement("input");
+        let HiddenCantidad = document.createElement("input");
+        let HiddenNombre = document.createElement("input");
+        let HiddenPrecioUnitario = document.createElement("input");
+
+        HiddenIndex.name = "conceptos.Index";
+        HiddenIndex.value = num;
+        HiddenIndex.type = "hidden";
+
+        HiddenCantidad.name = "conceptos[" + num + "].Cantidad";
+        HiddenCantidad.value = Cantidad;
+        HiddenCantidad.type = "hidden";
+
+        HiddenNombre.name = "conceptos["+ num + "].Nombre";
+        HiddenNombre.value = Nombre;
+        HiddenNombre.type = "hidden";
+
+        HiddenPrecioUnitario.name = "conceptos[" + num + "].PrecioUnitario";
+        HiddenPrecioUnitario.value = PrecioUnitario;
+        HiddenPrecioUnitario.type = "hidden";
+
+
+        // Se agregan los 'hidden" al "div"
+        DivConceptos.appendChild(HiddenIndex);
+        DivConceptos.appendChild(HiddenCantidad);
+        DivConceptos.appendChild(HiddenNombre);
+        DivConceptos.appendChild(HiddenPrecioUnitario);
+
+
+        // Se incrementa el puntero
+        ++num;
+    }
+</script>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MaestroDetalleMVCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="concepto">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="idVenta" Type="Int32" Nullable="false" />
+    <Property Name="cantidad" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="precioUnitario" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="total" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="venta" Relationship="Self.FK_concepto_venta" FromRole="concepto" ToRole="venta" />
+  </EntityType>
+  <EntityType Name="venta">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="concepto" Relationship="Self.FK_concepto_venta" FromRole="venta" ToRole="concepto" />
+  </EntityType>
+  <Association Name="FK_concepto_venta">
+    <End Role="venta" Type="Self.venta" Multiplicity="1" />
+    <End Role="concepto" Type="Self.concepto" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="venta">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="concepto">
+        <PropertyRef Name="idVenta" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MaestroDetalleMVCEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="concepto" EntityType="Self.concepto" />
+    <EntitySet Name="venta" EntityType="Self.venta" />
+    <AssociationSet Name="FK_concepto_venta" Association="Self.FK_concepto_venta">
+      <End Role="venta" EntitySet="venta" />
+      <End Role="concepto" EntitySet="concepto" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
